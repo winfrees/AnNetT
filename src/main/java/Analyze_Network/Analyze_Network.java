@@ -49,7 +49,7 @@ public class Analyze_Network implements PlugInFilter {
 		
 		this.image = imp;
                 this.isOriginal = this.image.getStack();
-		//this
+		
 		/*
 		 * The current return value accepts all gray-scale
 		 * images (if you access the pixels with ip.getf(x, y)
@@ -65,7 +65,7 @@ public class Analyze_Network implements PlugInFilter {
 		 * not what you want.
 		 */
 		//return DOES_8G | DOES_16 | DOES_32;
-                return DOES_ALL;
+                return DOES_8G;
 	}
 
 	/**
