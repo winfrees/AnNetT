@@ -73,7 +73,7 @@ public void showDialog(){
                 if(Maximum == "Yes"){ gd.addNumericField("    Radius:", MaximumRadius, MaximumRadius);}
                 gd.addRadioButtonGroup("Blur:", YesNo, 1, 1, YesNo[0]);
                 gd.addChoice("Thresholding Method:", ThresholdMethodChoice, ThresholdMethodChoice[7]);
-gd.addMessage("___________________________________________");
+                gd.addMessage("___________________________________________");
 
 		gd.addMessage("Interface for preprocessing and network analysis");
                 gd.addMessage("Author: Seth Winfree Indiana University   02/17/2014");
