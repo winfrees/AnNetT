@@ -21,7 +21,7 @@ import java.awt.AWTEvent;
  */
 public class Preferences extends java.lang.Object implements DialogListener {
    
-Object[] Preferences = new Object
+private Object[] Preferences = new Object[7];
     
 public Preferences(){}
 
@@ -52,10 +52,10 @@ public void showDialog(){
 			IJ.run(imageResult, "Skeletonize", "stack");
                         
                 String Background = new String("Yes");
-                int BackgroundRadius = 10;
+                double BackgroundRadius = 10;
                 String Contrast = "Yes";
                 String Maximum = "Yes";
-                int MaximumRadius = 2;
+                double MaximumRadius = 2;
                 String Blur = "Yes";
                 String ThresholdMethod ="Mean";
                 
@@ -84,13 +84,22 @@ public void showDialog(){
 
 
 		Background = gd.getNextString();
-                if(Background == "Yes"){ BackgroundRadius = (int)gd.getNextNumber();}
+                if(Background == "Yes"){ BackgroundRadius = (double)gd.getNextNumber();}
                 Contrast = gd.getNextString();
                 Maximum = gd.getNextString();
-                int MaximumRadius = 2;
-                String Blur = "Yes";
-                String ThresholdMethod ="Mean";
+                if(Maximum == "Yes"){ MaximumRadius = (double)gd.getNextNumber();}
+                Blur = gd.getNextString();
+                ThresholdMethod = gd.getNextString();
                 
+                Object[] Preferences = new Object[7];
+      
+                Preferences[0] = Background;
+                Preferences[1] = BackgroundRadius;
+                Preferences[2] = Contrast;
+                Preferences[3] = Maximum;
+                Preferences[4] = MaximumRadius;
+                Preferences[5] = Blur;
+                Preferences[6] = ThresholdMethod;
 
 	return;	
 	}
@@ -101,7 +110,11 @@ public void showDialog(){
         return true;
     }
 
+    public Object[] getPreferences(){
+        
+    return this.Preferences;
     
+    }
     
     
 }
