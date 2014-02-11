@@ -67,10 +67,10 @@ public void showDialog(){
 
                 gd.addMessage("Preprocessing Options:");
 		gd.addRadioButtonGroup("Background Subtraction:", YesNo, 1, 1, YesNo[0]);
-                if(Background == "Yes"){ gd.addNumericField("    Radius:", BackgroundRadius, BackgroundRadius);}
+                if(Background == "Yes"){ gd.addNumericField("    Radius:", BackgroundRadius, 1);}
                 gd.addRadioButtonGroup("Enhance Contrast:", YesNo, 1, 1, YesNo[0]);       
                 gd.addRadioButtonGroup("Maximum Filter:", YesNo, 1, 1, YesNo[0]);
-                if(Maximum == "Yes"){ gd.addNumericField("    Radius:", MaximumRadius, MaximumRadius);}
+                if(Maximum == "Yes"){ gd.addNumericField("    Radius:", MaximumRadius, 1);}
                 gd.addRadioButtonGroup("Blur:", YesNo, 1, 1, YesNo[0]);
                 gd.addChoice("Thresholding Method:", ThresholdMethodChoice, ThresholdMethodChoice[7]);
                 gd.addMessage("___________________________________________");
