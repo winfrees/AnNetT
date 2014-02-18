@@ -43,14 +43,14 @@ public void showDialog(){
 //		}
                 
                 
-                        IJ.run(imageResult, "Subtract Background...", "rolling=10 stack");
-			IJ.run(imageResult, "Enhance Contrast...", "saturated=0.4 normalize equalize process_all");
-			IJ.run(imageResult, "Maximum...", "radius=2 stack");
-			IJ.run(imageResult, "Gaussian Blur...", "sigma=3 stack");		
-			IJ.run(imageResult, "Convert to Mask", "method=Mean background=Dark stack");
-                        this.imageNetwork = imageResult.duplicate();
-			IJ.run(imageResult, "Skeletonize", "stack");
-                        
+//                        IJ.run(imageResult, "Subtract Background...", "rolling=10 stack");
+//			IJ.run(imageResult, "Enhance Contrast...", "saturated=0.4 normalize equalize process_all");
+//			IJ.run(imageResult, "Maximum...", "radius=2 stack");
+//			IJ.run(imageResult, "Gaussian Blur...", "sigma=3 stack");		
+//			IJ.run(imageResult, "Convert to Mask", "method=Mean background=Dark stack");
+//                        this.imageNetwork = imageResult.duplicate();
+//			IJ.run(imageResult, "Skeletonize", "stack");
+//                        
                 String Background = new String("Yes");
                 double BackgroundRadius = 10;
                 String Contrast = "Yes";
