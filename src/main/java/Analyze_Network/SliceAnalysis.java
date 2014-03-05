@@ -31,6 +31,7 @@ public class SliceAnalysis {
     private ImagePlus image;
     private ImagePlus imageNetwork;
     private ImageStack stackNetwork;
+    //private ImagePlus imageSkeleton;
     
     public SliceAnalysis(){}
     
@@ -49,6 +50,8 @@ public class SliceAnalysis {
 		AnalyzeSkeleton_ skel = new AnalyzeSkeleton_();
                 skel.setup("",imageResult);
                 SkeletonResult Output = skel.run(AnalyzeSkeleton_.NONE,false,false,null,true,true);
+                
+                //imageSkeleton = imageResult.duplicate();
 
 //		Analyze_Skeleton_ generates a SkeletonResult class that contains the
 //                values of interest by skeleton.  Whereby array position is each skeleton.  
@@ -66,6 +69,8 @@ public class SliceAnalysis {
           
 		int[] branches = Output.getBranches();
                 double[] branchLengths = Output.getAverageBranchLength();
+                
+                
                 
 		int countSkeletons = Output.getJunctions().length; //skeletons
                 
@@ -181,4 +186,5 @@ public class SliceAnalysis {
     
     
     public ArrayList getResult() {return this.Results;} 
+    //public ImagePlus getSkeletonImage() {return this.imageSkeleton;} 
 }

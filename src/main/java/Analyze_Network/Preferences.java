@@ -21,9 +21,9 @@ import java.awt.AWTEvent;
  */
 public class Preferences extends java.lang.Object implements DialogListener {
    
-private Object[] Preferences = new Object[7];
+private Object[] Preferences = new Object[8];
     
-public Preferences(){}
+public Preferences(){showDialog();}
 
 
 public void showDialog(){
@@ -51,12 +51,13 @@ public void showDialog(){
 //                        this.imageNetwork = imageResult.duplicate();
 //			IJ.run(imageResult, "Skeletonize", "stack");
 //                        
-                String Background = new String("Yes");
-                double BackgroundRadius = 10;
+                String Background = "Yes";
+                int BackgroundRadius = 10;
                 String Contrast = "Yes";
                 String Maximum = "Yes";
-                double MaximumRadius = 2;
+                int MaximumRadius = 2;
                 String Blur = "Yes";
+                String Calibration = "Yes";
                 String ThresholdMethod ="Mean";
                 
                 String[] ThresholdMethodChoice = {"Default","Huang","Intermodes","IsoData","IJ_IsoData","Li","MaxEntropy","Mean","MinError","Minimum","Moments","Otsu","Percentile","RenyiEntropy","Shanbhag","Triangle","Yen"};
@@ -67,12 +68,13 @@ public void showDialog(){
 
                 gd.addMessage("Preprocessing Options:");
 		gd.addRadioButtonGroup("Background Subtraction:", YesNo, 1, 1, YesNo[0]);
-                if(Background == "Yes"){ gd.addNumericField("    Radius:", BackgroundRadius, 1);}
+                if(Background == "Yes"){ gd.addNumericField("    Radius:", BackgroundRadius, 0);}
                 gd.addRadioButtonGroup("Enhance Contrast:", YesNo, 1, 1, YesNo[0]);       
                 gd.addRadioButtonGroup("Maximum Filter:", YesNo, 1, 1, YesNo[0]);
-                if(Maximum == "Yes"){ gd.addNumericField("    Radius:", MaximumRadius, 1);}
+                if(Maximum == "Yes"){ gd.addNumericField("    Radius:", MaximumRadius, 0);}
                 gd.addRadioButtonGroup("Blur:", YesNo, 1, 1, YesNo[0]);
                 gd.addChoice("Thresholding Method:", ThresholdMethodChoice, ThresholdMethodChoice[7]);
+                gd.addRadioButtonGroup("Use image calibration:", YesNo, 1, 1, YesNo[0]);
                 gd.addMessage("___________________________________________");
 
 		gd.addMessage("Interface for preprocessing and network analysis");
@@ -83,24 +85,27 @@ public void showDialog(){
 
 
 
-		Background = gd.getNextString();
-                if(Background == "Yes"){ BackgroundRadius = (double)gd.getNextNumber();}
-                Contrast = gd.getNextString();
-                Maximum = gd.getNextString();
-                if(Maximum == "Yes"){ MaximumRadius = (double)gd.getNextNumber();}
-                Blur = gd.getNextString();
-                ThresholdMethod = gd.getNextString();
+		Background = gd.getNextRadioButton();
+                BackgroundRadius = (int)gd.getNextNumber();
+                Contrast = gd.getNextRadioButton();
+                Maximum = gd.getNextRadioButton();;
+                MaximumRadius = (int)gd.getNextNumber();
+                Blur = gd.getNextRadioButton();
+                ThresholdMethod = gd.getNextChoice();
+                Calibration = gd.getNextRadioButton();
                 
-                Object[] Preferences = new Object[7];
+                //Object[] Preferences = new Object[7];
       
-                Preferences[0] = Background;
-                Preferences[1] = BackgroundRadius;
-                Preferences[2] = Contrast;
-                Preferences[3] = Maximum;
-                Preferences[4] = MaximumRadius;
-                Preferences[5] = Blur;
-                Preferences[6] = ThresholdMethod;
-
+                this.Preferences[0] = Background;
+                this.Preferences[1] = BackgroundRadius;
+                this.Preferences[2] = Contrast;
+                this.Preferences[3] = Maximum;
+                this.Preferences[4] = MaximumRadius;
+                this.Preferences[5] = Blur;
+                this.Preferences[6] = ThresholdMethod;
+                this.Preferences[7] = Calibration;
+                
+  
 	return;	
 	}
 

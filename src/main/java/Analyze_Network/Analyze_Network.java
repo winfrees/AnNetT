@@ -14,7 +14,10 @@ import ij.IJ;
 import ij.ImageJ;
 import ij.ImagePlus;
 import ij.ImageStack;
+import ij.WindowManager;
+import ij.measure.Calibration;
 import ij.measure.ResultsTable;
+import ij.plugin.StackCombiner;
 import ij.plugin.filter.PlugInFilter;
 import ij.process.ImageProcessor;
 
@@ -32,9 +35,12 @@ public class Analyze_Network implements PlugInFilter {
 	private ImagePlus image;
         private ImagePlus imageProcessed;
         private ImageStack isOriginal;
+        private Object[] Preferences = new Object[7];
+        private Calibration cal = new Calibration();
 	//private ImageStack isResults;
-	
-	
+        
+        private String[] UnCalibratedHeadings = new String[11];
+	private String[] CalibratedHeadings = new String[11];;
 
 	/**
 	 * This method gets called by ImageJ / Fiji to determine
@@ -48,7 +54,6 @@ public class Analyze_Network implements PlugInFilter {
 	public int setup(String arg, ImagePlus imp) {
 		
 		this.image = imp;
-                this.isOriginal = this.image.getStack();
 		
 		/*
 		 * The current return value accepts all gray-scale
@@ -78,12 +83,27 @@ public class Analyze_Network implements PlugInFilter {
 	@Override
 	public void run(ImageProcessor ip) {
             
+            this.isOriginal = this.image.getStack();
+            this.cal = this.image.getCalibration();
+            String[] uch = {"Slice","Total Branch Networks","Nodes","Triples","Quadruples","Tubes","Total Length","Avg Length","Tubes/Nodes","Closed Networks","Network size"};
+            String[] ch = {"Slice","Total Branch Networks","Nodes","Triples","Quadruples","Tubes","Total Length("+cal.getUnit()+")","Avg Length("+cal.getUnit()+")","Tubes/Nodes","Closed Networks","Network size("+cal.getUnit()+"^2)"};
+
+            this.UnCalibratedHeadings = uch;
+            this.CalibratedHeadings = ch;
+            
             //Pre-process the image
             //IJ.log("Pre-processing image...");
             IJ.showStatus("PreProcessing image...");
+            
+            Preferences pref = new Preferences();
+            Preferences = pref.getPreferences();
+            
+            
             this.imageProcessed = new ImagePlus("", this.image.getStack());
-            PreProcessor source = new PreProcessor(this.imageProcessed);           
+            PreProcessor source = new PreProcessor(this.imageProcessed, Preferences);           
             SliceAnalysis[] result = new SliceAnalysis[this.isOriginal.getSize()];
+            
+
             
             //Analyze slices
             //IJ.log("Processing Slices...");
@@ -98,9 +118,17 @@ public class Analyze_Network implements PlugInFilter {
             //IJ.log("Gathering variables...");
             ResultsTable rt = new ResultsTable();
             rt = calculateResults(result);
-            rt.show("Network Analysis");
+            rt.show("Network Analysis for "+this.image.getTitle());
 		
+            
+            
+            StackCombiner sc = new StackCombiner();
+            ImagePlus fused = new ImagePlus("fused "+this.image.getTitle(), sc.combineHorizontally(WindowManager.getImage("Mask Result").getImageStack(), WindowManager.getImage("PreProcessing Result").getImageStack()));
+            WindowManager.getImage("Mask Result").setTitle("Mask Result"+this.image.getTitle());
+            WindowManager.getImage("PreProcessing Result").setTitle("PreProcessing Result"+this.image.getTitle());
+            
             image.close();
+            fused.show();
         }
         
         private ResultsTable calculateResults(SliceAnalysis[] saResult){
@@ -112,6 +140,21 @@ public class Analyze_Network implements PlugInFilter {
         for(int i=0; i <= this.isOriginal.getSize()-1; i++){
             IJ.showStatus("Gathering data...");
             IJ.showProgress(i, this.isOriginal.getSize()); 
+            if(Preferences[7] == "No"){
+                alResult = saResult[i].getResult();
+        	rtResult.incrementCounter();
+                rtResult.addValue(this.CalibratedHeadings[0], i+1); //slice
+                rtResult.addValue(this.CalibratedHeadings[1], alResult.get(0).toString());
+                rtResult.addValue(this.CalibratedHeadings[2], alResult.get(1).toString());
+		rtResult.addValue(this.CalibratedHeadings[3], alResult.get(2).toString());
+                rtResult.addValue(this.CalibratedHeadings[4], alResult.get(3).toString());
+		rtResult.addValue(this.CalibratedHeadings[5], alResult.get(4).toString()); //branches
+		rtResult.addValue(this.CalibratedHeadings[6],  alResult.get(5).toString()); //junctions
+		rtResult.addValue(this.CalibratedHeadings[7], alResult.get(6).toString());
+		rtResult.addValue(this.CalibratedHeadings[8], alResult.get(7).toString());
+		rtResult.addValue(this.CalibratedHeadings[9],alResult.get(8).toString());  
+		rtResult.addValue(this.CalibratedHeadings[10],alResult.get(9).toString());}
+            if(Preferences[7] == "Yes"){
                 alResult = saResult[i].getResult();
         	rtResult.incrementCounter();
                 rtResult.addValue("Slice", i+1); //slice
@@ -124,11 +167,13 @@ public class Analyze_Network implements PlugInFilter {
 		rtResult.addValue("Avg Length", alResult.get(6).toString());
 		rtResult.addValue("Tubes/Nodes", alResult.get(7).toString());
 		rtResult.addValue("Closed Networks",alResult.get(8).toString());  
-		rtResult.addValue("Network size",alResult.get(9).toString()); 	
+		rtResult.addValue("Network size",alResult.get(9).toString());} 
        }
         
         return rtResult;
         }
+        
+        
         
         public static void main(String[] args) {
 		// set the plugins.dir property to make the plugin appear in the Plugins menu
