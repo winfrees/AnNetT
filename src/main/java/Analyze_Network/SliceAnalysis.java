@@ -18,6 +18,7 @@ import static ij.plugin.filter.ParticleAnalyzer.EXCLUDE_EDGE_PARTICLES;
 import static ij.plugin.filter.PlugInFilter.DOES_STACKS;
 
 
+
 import skeleton_analysis.*;
 import java.util.ArrayList;
 
@@ -28,17 +29,24 @@ import java.util.ArrayList;
 public class SliceAnalysis {
     
     private ArrayList Results;
-    private ImagePlus image;
-    private ImagePlus imageNetwork;
-    private ImageStack stackNetwork;
+    AnalyzeSkeleton_ skel = new AnalyzeSkeleton_();
+    //private ImagePlus image;
+    //private ImagePlus imageNetwork;
+    //private ImageStack stackNetwork;
     //private ImagePlus imageSkeleton;
+    private ImageProcessor ip;
+    
+    final int NETWORKAREA = 0;
+    final int NETWORKCOUNT = 1;
     
     public SliceAnalysis(){}
     
-    public SliceAnalysis(ImagePlus imp, ImageProcessor ipSlice, int slice){
+    public SliceAnalysis(ImageProcessor ipSlice, int slice){
     
-                this.imageNetwork = imp.duplicate();
-                this.stackNetwork = imageNetwork.getStack();
+                //this.imageNetwork = imp.duplicate();
+                //this.stackNetwork = imageNetwork.getStack();
+        
+                this.ip = ipSlice;
 
                 ArrayList alResult = new ArrayList();
 
@@ -46,10 +54,16 @@ public class SliceAnalysis {
                 		
 		int isWidth = imageResult.getWidth();
 		int isHeight = imageResult.getHeight();
+                
+                IJ.log("Starting skeleton analysis on slice#  " + slice);
 
-		AnalyzeSkeleton_ skel = new AnalyzeSkeleton_();
+		
                 skel.setup("",imageResult);
                 SkeletonResult Output = skel.run(AnalyzeSkeleton_.NONE,false,false,null,true,true);
+                
+                //imageResult.close();
+                
+                System.gc();
                 
                 //imageSkeleton = imageResult.duplicate();
 
@@ -62,6 +76,8 @@ public class SliceAnalysis {
 //                # of Branches
 //                      
 //                they must be summed across all skeletons
+                
+                    IJ.log("                ...Extracting values");
 		
                 int[] nodes = Output.getJunctions();
 		int[] triples = Output.getTriples();
@@ -85,12 +101,15 @@ public class SliceAnalysis {
                 int countNetwork = 0;
                 int averageSizeNetwork = 0;
 
+                //Output.;
+                
 		//NEW AND COOL IDEAS// distribution characteristics?  statistical test of branch lengths
                 //NEW AND COOL IDEAS// average network size with time per network, object tracking/growing etc.
                 //NEW AND COOL IDEAS// multiparametric analysis a la VTC, machine learning etc.
 		
+                System.gc();
                 //Sum across all skeleton
-                
+                IJ.log("                ...Summarizing values");
                 for(int i = 0; i <= countSkeletons-1; i++){
                 
                     countNodes = countNodes + nodes[i]; //junctions
@@ -108,6 +127,7 @@ public class SliceAnalysis {
 
 		//countNetwork; //closed inbetween tubules
 		//averageSizeNetwork; //area of inbetween tubulesskel.getNumberOfTrees()
+                IJ.log("                ...adding to results table");
 			
                 alResult.add(countSkeletons); //contiguous network (not nesc. closed)
                 alResult.add(countNodes); //junctions
@@ -117,24 +137,26 @@ public class SliceAnalysis {
                 alResult.add(totalTubeLength); //length summation
                 alResult.add((double)totalTubeLength/countSkeletons); //average tube length
 		alResult.add((double)countBranches/countNodes); //ratio
-		alResult.add(calculateClosedNetworkNumber(slice)); //sum of closed networks
-		alResult.add(calculateClosedNetworkAverageArea(slice)); //average size of closed networks
+		alResult.add(Integer.parseInt(calculateClosedNetworkVariables(ipSlice).get(1).toString())); //sum of closed networks
+		alResult.add(Double.parseDouble(calculateClosedNetworkVariables(ipSlice).get(0).toString())); //average size of closed networks
                 
                 //IJ.log("Slice# "+slice+" , values: ");
                 //IJ.log(countTriples.length + "," + branches.length + "," + countNode  + "," + countTube/countNode + "," +   totalLengthTube + "," +   countNet + "," +  countNetwork + "," +  averageSizeNetwork);
-	
+                System.gc();
                 this.Results = alResult;
    }
     
-    private int calculateClosedNetworkNumber(int i){
+    private ArrayList calculateClosedNetworkVariables(ImageProcessor ip_pass){
     
        ResultsTable rt = new ResultsTable();
         int countRt = 0;
         
         double networkArea= 0;
         
+        ArrayList al_return = new ArrayList();
         
-        ImagePlus imp = new ImagePlus("", this.stackNetwork.getProcessor(i));
+        
+        ImagePlus imp = new ImagePlus("", ip_pass);
     
         IJ.run(imp, "Invert", "");
         IJ.setThreshold(imp, 255, 255);
@@ -143,6 +165,8 @@ public class SliceAnalysis {
         ParticleAnalyzer pa = new ParticleAnalyzer(LIMIT&EXCLUDE_EDGE_PARTICLES , AREA, rt, 0, Double.POSITIVE_INFINITY, 0, 1);
         pa.analyze(imp);
         
+        
+        
         countRt = rt.getCounter();
         
         for(int c = 0; c <= countRt-1; c++){
@@ -150,10 +174,14 @@ public class SliceAnalysis {
             networkArea = networkArea+rt.getValueAsDouble(0, c);
         }
         
-        
-     return countRt;
+     System.gc();
+     
+     al_return.add((double)networkArea/countRt);
+     al_return.add(countRt);
+     
+     return al_return;
     };
-    private double calculateClosedNetworkAverageArea(int i){
+    private double calculateClosedNetworkAverageArea(ImageProcessor ip_pass){
     
        ResultsTable rt = new ResultsTable();
         int countRt = 0;
@@ -161,7 +189,7 @@ public class SliceAnalysis {
         double networkArea= 0;
         
         
-        ImagePlus imp = new ImagePlus("", this.stackNetwork.getProcessor(i));
+        ImagePlus imp = new ImagePlus("", ip_pass);
     
         IJ.run(imp, "Invert", "");
         IJ.setThreshold(imp, 255, 255);

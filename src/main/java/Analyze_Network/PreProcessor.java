@@ -28,7 +28,10 @@ public PreProcessor(ImagePlus imp, Object[] Preferences) {
                         
                         this.imageOriginal = imp.duplicate();
                         this.imageOriginal.setTitle("Original");
-                        this.imageResult = new ImagePlus("PreProcessing Result", imp.getStack());
+                        this.imageResult = imp.duplicate();
+                        
+                        
+                        //this.imageResult = new ImagePlus("PreProcessing Result", imp.getStack());
                         IJ.log("Starting PreProcessing...");
 
                         if((String)Preferences[0] == "Yes"){IJ.run(imageResult, "Subtract Background...", "rolling="+Preferences[1]+" stack"); IJ.log("Subtract Background... rolling="+Preferences[1]+" stack");}
@@ -41,9 +44,9 @@ public PreProcessor(ImagePlus imp, Object[] Preferences) {
                            
                         imp.close();
                         imageOriginal.show();
-			imageResult.show();
-                        imageNetwork.setTitle("Mask Result");
-                        imageNetwork.show();
+			//imageResult.show();
+                        //imageNetwork.setTitle("Mask Result");
+                        //imageNetwork.show();
 			//getResults(imp);
 	}
 public ImagePlus getNetwork(){return this.imageNetwork;}
@@ -53,4 +56,5 @@ public ImagePlus getSlice(int i){
     
     return new ImagePlus("Slice: " + i,is.getProcessor(i));
 }
+
     }
