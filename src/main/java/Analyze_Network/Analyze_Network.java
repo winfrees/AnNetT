@@ -107,23 +107,15 @@ public class Analyze_Network implements PlugInFilter {
             this.imageProcessed = this.image.duplicate();
             PreProcessor source = new PreProcessor(this.imageProcessed, Preferences);           
             SliceAnalysis[] result = new SliceAnalysis[this.isOriginal.getSize()];
-            
 
-            
-            //Analyze slices
-            //IJ.log("Processing Slices...");
            
             for(int i = 1; i <= this.isOriginal.getSize(); i++){
                 IJ.showStatus("Processing slices...");
                 IJ.showProgress(i, this.isOriginal.getSize()); 
-                //result[i-1] = new SliceAnalysis(source.getSlice(i), isOriginal.getProcessor(i), i);
-                result[i-1] = new SliceAnalysis(source.getResult().getStack().getProcessor(i), i);
-                //
-                System.gc();
+                result[i-1] = new SliceAnalysis(new ImagePlus("",source.getResult().getStack().getProcessor(i)), i);
+  
             }
-            
-            //collect variables
-            //IJ.log("Gathering variables...");
+
             ResultsTable rt = new ResultsTable();
             rt = calculateResults(result);
             String results_title = new String("Network Analysis for "+this.image.getTitle());
@@ -131,16 +123,10 @@ public class Analyze_Network implements PlugInFilter {
             if(Preferences[7] == "Yes"){results_title = new String("Calibrated Network Analysis for "+this.image.getTitle());};
             if(Preferences[7] == "No"){results_title = new String("Uncalibrated Network Analysis for "+this.image.getTitle());};
             rt.show(results_title);
-		
-            System.gc();
-            
+
             StackCombiner sc = new StackCombiner();
             ImagePlus fused = new ImagePlus("fused "+this.image.getTitle(), sc.combineHorizontally(source.getResult().getImageStack(), source.getNetwork().getImageStack()));
-            //WindowManager.getImage("Mask Result").setTitle("Mask Result"+this.image.getTitle());
-            //WindowManager.getImage("PreProcessing Result").setTitle("PreProcessing Result"+this.image.getTitle());
-            
-            System.gc();
-            //image.close();
+
             fused.show();
         }
         
@@ -148,8 +134,7 @@ public class Analyze_Network implements PlugInFilter {
         
         ResultsTable rtResult = new ResultsTable(); 
         ArrayList alResult = new ArrayList(10);
-        //if(alResult.size() < 1){IJ.log("No results to gather");}
-        //if(alResult.size() > 0){
+
         for(int i=0; i <= this.isOriginal.getSize()-1; i++){
             IJ.showStatus("Gathering data...");
             IJ.showProgress(i, this.isOriginal.getSize()); 
@@ -186,8 +171,6 @@ public class Analyze_Network implements PlugInFilter {
         
         return rtResult;
         }
-        
-        
         
         public static void main(String[] args) {
 		// set the plugins.dir property to make the plugin appear in the Plugins menu
