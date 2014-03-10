@@ -23,7 +23,7 @@ import ij.process.ImageProcessor;
 
 import static ij.plugin.filter.PlugInFilter.DOES_16;
 import static ij.plugin.filter.PlugInFilter.DOES_32;
-import static ij.plugin.filter.PlugInFilter.DOES_8G;
+import static ij.plugin.filter.PlugInFilter.DOES_8G; 
 import java.util.ArrayList;
 
 
