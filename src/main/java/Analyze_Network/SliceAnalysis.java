@@ -105,20 +105,20 @@ public class SliceAnalysis {
                 alResult.add(totalTubeLength); //length summation
                 alResult.add((double)totalTubeLength/countSkeletons); //average tube length
 		alResult.add((double)countBranches/countNodes); //ratio
-		alResult.add(Integer.parseInt(calculateClosedNetworkVariables(impSlice).get(1).toString())); //sum of closed networks
-		alResult.add(Double.parseDouble(calculateClosedNetworkVariables(impSlice).get(0).toString())); //average size of closed networks
+		alResult.add((int)calculateClosedNetworkCount(impSlice)); //sum of closed networks
+		alResult.add((double)calculateClosedNetworkAverageArea(impSlice)); //average size of closed networks
 
                 this.Results = alResult;
    }
     
-    private ArrayList calculateClosedNetworkVariables(ImagePlus imp_pass){
+    private int calculateClosedNetworkCount(ImagePlus imp_pass){
     
        ResultsTable rt = new ResultsTable();
         int countRt = 0;
         
         double networkArea= 0;
         
-        ArrayList al_return = new ArrayList();
+        //ArrayList al_return = new ArrayList();
 
         IJ.run(imp_pass, "Invert", "");
         IJ.setThreshold(imp_pass, 255, 255);
@@ -132,13 +132,10 @@ public class SliceAnalysis {
         
             networkArea = networkArea+rt.getValueAsDouble(0, c);
         }
-        
-     al_return.add((double)networkArea/countRt);
-     al_return.add(countRt);
      
-     return al_return;
+     return countRt;
     };
-    private double calculateClosedNetworkAverageArea(ImageProcessor ip_pass){
+    private double calculateClosedNetworkAverageArea(ImagePlus imp_pass){
     
        ResultsTable rt = new ResultsTable();
         int countRt = 0;
@@ -146,13 +143,13 @@ public class SliceAnalysis {
         double networkArea= 0;
         
         
-        ImagePlus imp = new ImagePlus("", ip_pass);
+        //ImagePlus imp = new ImagePlus("", ip_pass);
     
-        IJ.run(imp, "Invert", "");
-        IJ.setThreshold(imp, 255, 255);
+        IJ.run(imp_pass, "Invert", "");
+        IJ.setThreshold(imp_pass, 255, 255);
        
         ParticleAnalyzer pa = new ParticleAnalyzer(EXCLUDE_EDGE_PARTICLES&LIMIT, AREA, rt, 0, Double.POSITIVE_INFINITY, 0, 1);
-        pa.analyze(imp);
+        pa.analyze(imp_pass);
         
         countRt = rt.getCounter();
         
