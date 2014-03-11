@@ -44,7 +44,7 @@ public PreProcessor(ImagePlus imp, Object[] Preferences) {
 			IJ.run(imageResult, "Skeletonize", "stack");
                            
                         imp.close();
-                        imageOriginal.show();
+                        //imageOriginal.show();
 			//imageResult.show();
                         //imageNetwork.setTitle("Mask Result");
                         //imageNetwork.show();

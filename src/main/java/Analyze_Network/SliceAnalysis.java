@@ -112,7 +112,12 @@ public class SliceAnalysis {
 		alResult.add((double)countBranches/countNodes); //ratio
 		alResult.add((int)calculateClosedNetworkVariables(impAnalysis, this.NETWORKCOUNT)); //sum of closed networks
 		alResult.add((double)calculateClosedNetworkVariables(impAnalysis, this.NETWORKAREA)); //average size of closed networks
-
+                
+                impAnalysis.flush();
+                impSkeleton.flush();
+                impMask.flush();
+                
+                
                 this.Results = alResult;
    }
     
@@ -151,6 +156,7 @@ public class SliceAnalysis {
         
         if(choice == this.NETWORKAREA){return (double)networkArea/countRt;} 
         if(choice == this.NETWORKCOUNT){return (double)countRt;} 
+        
         return 0.0;
     };
     
