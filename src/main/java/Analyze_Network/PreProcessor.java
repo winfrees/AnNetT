@@ -33,7 +33,7 @@ public PreProcessor(ImagePlus imp, Object[] Preferences) {
                         
                         //this.imageResult = new ImagePlus("PreProcessing Result", imp.getStack());
                         
-                        IJ.log("Starting PreProcessing...");
+                        //IJ.log("Starting PreProcessing...");
 
                         if((String)Preferences[0] == "Yes"){IJ.run(imageResult, "Subtract Background...", "rolling="+Preferences[1]+" stack"); IJ.log("Subtract Background... rolling="+Preferences[1]+" stack");}
 			if((String)Preferences[2] == "Yes"){IJ.run(imageResult, "Enhance Contrast...", "saturated=0.4 normalize equalize process_all");IJ.log("Enhance Contrast...  saturated=0.4 normalize equalize process_all");}

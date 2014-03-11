@@ -102,13 +102,13 @@ public class Analyze_Network implements PlugInFilter {
             
             //Pre-process the image
             //IJ.log("Pre-processing image...");
-            IJ.showStatus("PreProcessing image...");
+            IJ.showStatus("Gathering settings...");
             
             Preferences pref = new Preferences();
             Preferences = pref.getPreferences();
             
             Date startTime = new Date();
-            
+            IJ.showStatus("PreProcessing image...");
             IJ.log("____________________________________________________");
             IJ.log("Starting network analysis on "+ this.image.getTitle() + "...");
             IJ.log("Date: " + DateFormat.getDateInstance().format(new Date()));
@@ -189,17 +189,17 @@ public class Analyze_Network implements PlugInFilter {
         return rtResult;
         }
         
-//        public static void main(String[] args) {
+        public static void main(String[] args) {
 //		// set the plugins.dir property to make the plugin appear in the Plugins menu
 //		Class<?> clazz = Analyze_Network.class;
 //		String url = clazz.getResource("/" + clazz.getName().replace('.', '/') + ".class").toString();
 //		String pluginsDir = url.substring(5, url.length() - clazz.getName().length() - 6);
 //		System.setProperty("plugins.dir", pluginsDir);
-//
+
 //		// start ImageJ
 //		new ImageJ();
 //
 //		// run the plugin
 //		IJ.runPlugIn(clazz.getName(), "");
-//	}
+	}
 }
