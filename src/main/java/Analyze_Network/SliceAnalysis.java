@@ -14,6 +14,8 @@ import static ij.measure.Measurements.AREA;
 import static ij.measure.Measurements.LIMIT;
 import ij.plugin.filter.ParticleAnalyzer;
 import static ij.plugin.filter.ParticleAnalyzer.EXCLUDE_EDGE_PARTICLES;
+import static ij.plugin.filter.ParticleAnalyzer.ADD_TO_MANAGER;
+import static ij.process.ImageProcessor.RED_LUT;
 
 
 
@@ -35,21 +37,23 @@ public class SliceAnalysis {
     //private ImagePlus imageSkeleton;
     //private ImageProcessor imp;
     
-    final int NETWORKAREA = 0;
+    final int NETWORKAREA = 2;
     final int NETWORKCOUNT = 1;
     
     public SliceAnalysis(){}
     
-    public SliceAnalysis(ImagePlus impSlice, int slice){
+    public SliceAnalysis(ImagePlus impSkeleton,ImagePlus impMask, int slice){
     
 
                 ArrayList alResult = new ArrayList();
                 		
-		int isWidth = impSlice.getWidth();
-		int isHeight = impSlice.getHeight();
+		int isWidth = impSkeleton.getWidth();
+		int isHeight = impSkeleton.getHeight();
                 
-
-                skel.setup("",impSlice);
+                ImagePlus impAnalysis = new ImagePlus("",impMask.duplicate().getProcessor());
+                
+                IJ.showStatus("Analyzing Skeleton...");
+                skel.setup("",impSkeleton);
                 SkeletonResult Output = skel.run(AnalyzeSkeleton_.NONE,false,false,null,true,true);
                 
 
@@ -87,6 +91,7 @@ public class SliceAnalysis {
                 //NEW AND COOL IDEAS// average network size with time per network, object tracking/growing etc.
                 //NEW AND COOL IDEAS// multiparametric analysis a la VTC, machine learning etc.
 		
+                IJ.showStatus("Summarizing skeleton and networks...");
                 for(int i = 0; i <= countSkeletons-1; i++){
                 
                     countNodes = countNodes + nodes[i]; //junctions
@@ -105,62 +110,48 @@ public class SliceAnalysis {
                 alResult.add(totalTubeLength); //length summation
                 alResult.add((double)totalTubeLength/countSkeletons); //average tube length
 		alResult.add((double)countBranches/countNodes); //ratio
-		alResult.add((int)calculateClosedNetworkCount(impSlice)); //sum of closed networks
-		alResult.add((double)calculateClosedNetworkAverageArea(impSlice)); //average size of closed networks
+		alResult.add((int)calculateClosedNetworkVariables(impAnalysis, this.NETWORKCOUNT)); //sum of closed networks
+		alResult.add((double)calculateClosedNetworkVariables(impAnalysis, this.NETWORKAREA)); //average size of closed networks
 
                 this.Results = alResult;
    }
     
-    private int calculateClosedNetworkCount(ImagePlus imp_pass){
+//    private int calculateClosedNetworkCount(ImagePlus imp_pass){
+//    
+//       ResultsTable rt = new ResultsTable();
+//       
+//        IJ.run(imp_pass, "Invert", "");
+//        IJ.setThreshold(imp_pass, 255, 255);
+//       
+//        ParticleAnalyzer pa = new ParticleAnalyzer(EXCLUDE_EDGE_PARTICLES&LIMIT, AREA, rt, 0, Double.POSITIVE_INFINITY, 0, 1);
+//        pa.analyze(imp_pass);
+//        
+//        //IJ.log("Network count:" + rt.getCounter());
+//        
+//        return rt.getCounter();
+//
+//    };
+    private double calculateClosedNetworkVariables(ImagePlus impMask, int choice){
     
        ResultsTable rt = new ResultsTable();
         int countRt = 0;
         
         double networkArea= 0;
-        
-        //ArrayList al_return = new ArrayList();
 
-        IJ.run(imp_pass, "Invert", "");
-        IJ.setThreshold(imp_pass, 255, 255);
- 
-        ParticleAnalyzer pa = new ParticleAnalyzer(LIMIT&EXCLUDE_EDGE_PARTICLES , AREA, rt, 0, Double.POSITIVE_INFINITY, 0, 1);
-        pa.analyze(imp_pass);
+        if(choice == this.NETWORKCOUNT){ impMask.getProcessor().invert();impMask.getProcessor().setThreshold(255,255,RED_LUT);}
 
+        ParticleAnalyzer pa = new ParticleAnalyzer(EXCLUDE_EDGE_PARTICLES, AREA, rt, 0, Double.POSITIVE_INFINITY, 0, 1);
+        pa.analyze(impMask);
         countRt = rt.getCounter();
-        
-        for(int c = 0; c <= countRt-1; c++){
-        
-            networkArea = networkArea+rt.getValueAsDouble(0, c);
-        }
-     
-     return countRt;
-    };
-    private double calculateClosedNetworkAverageArea(ImagePlus imp_pass){
-    
-       ResultsTable rt = new ResultsTable();
-        int countRt = 0;
-        
-        double networkArea= 0;
-        
-        
-        //ImagePlus imp = new ImagePlus("", ip_pass);
-    
-        IJ.run(imp_pass, "Invert", "");
-        IJ.setThreshold(imp_pass, 255, 255);
-       
-        ParticleAnalyzer pa = new ParticleAnalyzer(EXCLUDE_EDGE_PARTICLES&LIMIT, AREA, rt, 0, Double.POSITIVE_INFINITY, 0, 1);
-        pa.analyze(imp_pass);
-        
-        countRt = rt.getCounter();
-        
+
         for(int c = 0; c <= countRt-1; c++){
         
             networkArea = networkArea+rt.getValueAsDouble(0, c);
         }
         
-        
-     return (double)networkArea/countRt;
-
+        if(choice == this.NETWORKAREA){return (double)networkArea/countRt;} 
+        if(choice == this.NETWORKCOUNT){return (double)countRt;} 
+        return 0.0;
     };
     
     

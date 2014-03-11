@@ -24,7 +24,9 @@ import ij.process.ImageProcessor;
 import static ij.plugin.filter.PlugInFilter.DOES_16;
 import static ij.plugin.filter.PlugInFilter.DOES_32;
 import static ij.plugin.filter.PlugInFilter.DOES_8G; 
+import java.text.DateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 
 /**
@@ -84,6 +86,8 @@ public class Analyze_Network implements PlugInFilter {
 	@Override
 	public void run(ImageProcessor ip) {
             
+            
+            
             this.isOriginal = this.image.getStack();
            //this.isProcessed = this.image.duplicate().getStack();
             this.cal = this.image.getCalibration();
@@ -103,6 +107,13 @@ public class Analyze_Network implements PlugInFilter {
             Preferences pref = new Preferences();
             Preferences = pref.getPreferences();
             
+            Date startTime = new Date();
+            
+            IJ.log("____________________________________________________");
+            IJ.log("Starting network analysis on "+ this.image.getTitle() + "...");
+            IJ.log("Date: " + DateFormat.getDateInstance().format(new Date()));
+            IJ.log("Start time: " + DateFormat.getTimeInstance().format(new Date()));
+            
             
             this.imageProcessed = this.image.duplicate();
             PreProcessor source = new PreProcessor(this.imageProcessed, Preferences);           
@@ -112,7 +123,7 @@ public class Analyze_Network implements PlugInFilter {
             for(int i = 1; i <= this.isOriginal.getSize(); i++){
                 IJ.showStatus("Processing slices...");
                 IJ.showProgress(i, this.isOriginal.getSize()); 
-                result[i-1] = new SliceAnalysis(new ImagePlus("",source.getResult().getStack().getProcessor(i)), i);
+                result[i-1] = new SliceAnalysis(new ImagePlus("",source.getResult().getStack().getProcessor(i)), new ImagePlus("",source.getNetwork().getStack().getProcessor(i)),i);
   
             }
 
@@ -125,8 +136,14 @@ public class Analyze_Network implements PlugInFilter {
             rt.show(results_title);
 
             StackCombiner sc = new StackCombiner();
+            
             ImagePlus fused = new ImagePlus("fused "+this.image.getTitle(), sc.combineHorizontally(source.getResult().getImageStack(), source.getNetwork().getImageStack()));
-
+            Date finishTime = new Date();
+            
+            long totalTime = finishTime.getTime()-startTime.getTime();
+            
+            IJ.log("Finish time: " + DateFormat.getTimeInstance().format(finishTime));
+            IJ.log("Processing time: " + (totalTime/1000) + " sec");
             fused.show();
         }
         
