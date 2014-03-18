@@ -123,7 +123,7 @@ public class Analyze_Network implements PlugInFilter {
             for(int i = 1; i <= this.isOriginal.getSize(); i++){
                 IJ.showStatus("Processing slices...");
                 IJ.showProgress(i, this.isOriginal.getSize()); 
-                result[i-1] = new SliceAnalysis(new ImagePlus("",source.getResult().getStack().getProcessor(i)), new ImagePlus("",source.getNetwork().getStack().getProcessor(i)),i);
+                result[i-1] = new SliceAnalysis(new ImagePlus("",source.getResult().getStack().getProcessor(i)), new ImagePlus("",source.getNetwork().getStack().getProcessor(i)),i,(Integer)Preferences[6]);
   
             }
 
@@ -168,7 +168,7 @@ public class Analyze_Network implements PlugInFilter {
 		rtResult.addValue(this.CalibratedHeadings[7], (cal.pixelWidth * Double.parseDouble(alResult.get(6).toString())));
 		rtResult.addValue(this.CalibratedHeadings[8], alResult.get(7).toString());
 		rtResult.addValue(this.CalibratedHeadings[9],alResult.get(8).toString());  
-		rtResult.addValue(this.CalibratedHeadings[10],(cal.pixelWidth * Double.parseDouble(alResult.get(9).toString())));}
+		rtResult.addValue(this.CalibratedHeadings[10],(cal.pixelWidth *cal.pixelWidth * Double.parseDouble(alResult.get(9).toString())));}
                 
             if(Preferences[7] == "No"){
                 alResult = saResult[i].getResult();
@@ -189,17 +189,17 @@ public class Analyze_Network implements PlugInFilter {
         return rtResult;
         }
         
-//        public static void main(String[] args) {
-////		// set the plugins.dir property to make the plugin appear in the Plugins menu
-////		Class<?> clazz = Analyze_Network.class;
-////		String url = clazz.getResource("/" + clazz.getName().replace('.', '/') + ".class").toString();
-////		String pluginsDir = url.substring(5, url.length() - clazz.getName().length() - 6);
-////		System.setProperty("plugins.dir", pluginsDir);
-//
-////		// start ImageJ
-////		new ImageJ();
-////
-////		// run the plugin
-////		IJ.runPlugIn(clazz.getName(), "");
-//	}
+        public static void main(String[] args) {
+		// set the plugins.dir property to make the plugin appear in the Plugins menu
+		Class<?> clazz = Analyze_Network.class;
+		String url = clazz.getResource("/" + clazz.getName().replace('.', '/') + ".class").toString();
+		String pluginsDir = url.substring(5, url.length() - clazz.getName().length() - 6);
+		System.setProperty("plugins.dir", pluginsDir);
+
+		// start ImageJ
+		new ImageJ();
+
+		// run the plugin
+		IJ.runPlugIn(clazz.getName(), "");
+	}
 }

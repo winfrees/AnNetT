@@ -59,6 +59,7 @@ public void showDialog(){
                 String Blur = "Yes";
                 String Calibration = "Yes";
                 String ThresholdMethod ="Mean";
+                int NetworkSize = 300;
                 
                 String[] ThresholdMethodChoice = {"Default","Huang","Intermodes","IsoData","IJ_IsoData","Li","MaxEntropy","Mean","MinError","Minimum","Moments","Otsu","Percentile","RenyiEntropy","Shanbhag","Triangle","Yen"};
                
@@ -73,8 +74,9 @@ public void showDialog(){
                 gd.addRadioButtonGroup("Maximum Filter:", YesNo, 1, 1, YesNo[0]);
                 if(Maximum == "Yes"){ gd.addNumericField("    Radius:", MaximumRadius, 0);}
                 gd.addRadioButtonGroup("Blur:", YesNo, 1, 1, YesNo[0]);
-                gd.addChoice("Thresholding Method:", ThresholdMethodChoice, ThresholdMethodChoice[7]);
+                //gd.addChoice("Thresholding Method:", ThresholdMethodChoice, ThresholdMethodChoice[7]);
                 gd.addRadioButtonGroup("Use image calibration:", YesNo, 1, 1, YesNo[0]);
+                gd.addNumericField("Minimum Network Size (px)", NetworkSize, 0);
                 gd.addMessage("___________________________________________");
 
 		gd.addMessage("Interface for preprocessing and network analysis");
@@ -91,8 +93,9 @@ public void showDialog(){
                 Maximum = gd.getNextRadioButton();;
                 MaximumRadius = (int)gd.getNextNumber();
                 Blur = gd.getNextRadioButton();
-                ThresholdMethod = gd.getNextChoice();
+                //ThresholdMethod = gd.getNextChoice();
                 Calibration = gd.getNextRadioButton();
+                NetworkSize = (int)gd.getNextNumber();
                 
                 //Object[] Preferences = new Object[7];
       
@@ -102,7 +105,7 @@ public void showDialog(){
                 this.Preferences[3] = Maximum;
                 this.Preferences[4] = MaximumRadius;
                 this.Preferences[5] = Blur;
-                this.Preferences[6] = ThresholdMethod;
+                this.Preferences[6] = NetworkSize;
                 this.Preferences[7] = Calibration;
                 
   

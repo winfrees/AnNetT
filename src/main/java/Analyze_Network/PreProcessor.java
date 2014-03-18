@@ -39,7 +39,7 @@ public PreProcessor(ImagePlus imp, Object[] Preferences) {
 			if((String)Preferences[2] == "Yes"){IJ.run(imageResult, "Enhance Contrast...", "saturated=0.4 normalize equalize process_all");IJ.log("Enhance Contrast...  saturated=0.4 normalize equalize process_all");}
 			if((String)Preferences[3] == "Yes"){IJ.run(imageResult, "Maximum...", "radius="+Preferences[4]+" stack");IJ.log("Maximum...  radius="+Preferences[4]+" stack");}
 			if((String)Preferences[5] == "Yes"){IJ.run(imageResult, "Gaussian Blur...", "sigma=3 stack");IJ.log("Gaussian Blur...  sigma=3 stack");}		
-			IJ.run(imageResult, "Convert to Mask", "method="+(String)Preferences[6]+" background=Dark stack");
+			IJ.run(imageResult, "Convert to Mask", "background=Dark stack");
                         this.imageNetwork = imageResult.duplicate();
 			IJ.run(imageResult, "Skeletonize", "stack");
                            
