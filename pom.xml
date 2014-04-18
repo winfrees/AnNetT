@@ -14,7 +14,7 @@
 
 	<groupId>sw_iupui</groupId>
 	<artifactId>Analyze_Networks</artifactId>
-	<version>0.5.0</version>
+	<version>0.6.0</version>
 
 	<name>plugins/Analyze_Networks</name>
 	<description>A Maven project implementing an ImageJ 1.x plugin</description>
