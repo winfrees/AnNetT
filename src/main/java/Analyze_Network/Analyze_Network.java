@@ -53,7 +53,7 @@ public class Analyze_Network implements PlugInFilter {
         private ImagePlus imageProcessed;
         private ImageStack isOriginal;
 
-        private Object[] Preferences = new Object[7];
+        private Object[] Preferences = new Object[9];
         private Calibration cal = new Calibration();
 	//private ImageStack isResults;
         
@@ -101,7 +101,10 @@ public class Analyze_Network implements PlugInFilter {
 	@Override
 	public void run(ImageProcessor ip) {
             
-            
+         
+
+
+  
             
             this.isOriginal = this.image.getStack();
            //this.isProcessed = this.image.duplicate().getStack();
@@ -119,6 +122,7 @@ public class Analyze_Network implements PlugInFilter {
             //IJ.log("Pre-processing image...");
             IJ.showStatus("Gathering settings...");
             
+            try {
             Preferences pref = new Preferences();
             Preferences = pref.getPreferences();
             
@@ -138,7 +142,7 @@ public class Analyze_Network implements PlugInFilter {
             for(int i = 1; i <= this.isOriginal.getSize(); i++){
                 IJ.showStatus("Processing slices...");
                 IJ.showProgress(i, this.isOriginal.getSize()); 
-                result[i-1] = new SliceAnalysis(new ImagePlus("",source.getResult().getStack().getProcessor(i)), new ImagePlus("",source.getNetwork().getStack().getProcessor(i)),i,(Integer)Preferences[6]);
+                result[i-1] = new SliceAnalysis(new ImagePlus("",source.getResult().getStack().getProcessor(i)), new ImagePlus("",source.getNetwork().getStack().getProcessor(i)),i,(Integer)Preferences[6], Preferences[8].toString());
   
             }
 
@@ -160,6 +164,9 @@ public class Analyze_Network implements PlugInFilter {
             IJ.log("Finish time: " + DateFormat.getTimeInstance().format(finishTime));
             IJ.log("Processing time: " + (totalTime/1000) + " sec");
             fused.show();
+            }
+            catch (NullPointerException npe) { IJ.showStatus("Plugin cancelled..."); IJ.log("Plugin cancelled...");}
+            catch (OutOfMemoryError E) { IJ.showStatus("ImageJ out of memory..."); IJ.log("ImageJ out of memory...");} 
         }
         
         private ResultsTable calculateResults(SliceAnalysis[] saResult){

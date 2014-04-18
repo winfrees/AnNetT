@@ -37,7 +37,7 @@ import java.awt.AWTEvent;
 
 public class Preferences extends java.lang.Object implements DialogListener {
    
-private Object[] Preferences = new Object[8];
+private Object[] Preferences = new Object[9];
     
 public Preferences(){showDialog();}
 
@@ -75,6 +75,7 @@ public void showDialog(){
                 String Blur = "Yes";
                 String Calibration = "Yes";
                 String ThresholdMethod ="Mean";
+                String ExcludeEdge = "No";
                 int NetworkSize = 300;
                 
                 String[] ThresholdMethodChoice = {"Default","Huang","Intermodes","IsoData","IJ_IsoData","Li","MaxEntropy","Mean","MinError","Minimum","Moments","Otsu","Percentile","RenyiEntropy","Shanbhag","Triangle","Yen"};
@@ -93,6 +94,7 @@ public void showDialog(){
                 //gd.addChoice("Thresholding Method:", ThresholdMethodChoice, ThresholdMethodChoice[7]);
                 gd.addRadioButtonGroup("Use image calibration:", YesNo, 1, 1, YesNo[0]);
                 gd.addNumericField("Minimum Network Size (px)", NetworkSize, 0);
+                gd.addRadioButtonGroup("Exclude Edge Networks:", YesNo, 1, 1, YesNo[1]);
                 gd.addMessage("___________________________________________");
 
 		gd.addMessage("Interface for preprocessing and network analysis");
@@ -112,6 +114,7 @@ public void showDialog(){
                 //ThresholdMethod = gd.getNextChoice();
                 Calibration = gd.getNextRadioButton();
                 NetworkSize = (int)gd.getNextNumber();
+                ExcludeEdge = gd.getNextRadioButton();
                 
                 //Object[] Preferences = new Object[7];
       
@@ -123,6 +126,7 @@ public void showDialog(){
                 this.Preferences[5] = Blur;
                 this.Preferences[6] = NetworkSize;
                 this.Preferences[7] = Calibration;
+                this.Preferences[8] = ExcludeEdge;
                 
   
 	return;	

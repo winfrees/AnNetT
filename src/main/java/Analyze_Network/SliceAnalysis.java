@@ -32,8 +32,10 @@ import ij.IJ;
 import static ij.measure.Measurements.AREA;
 import static ij.measure.Measurements.LIMIT;
 import ij.plugin.filter.ParticleAnalyzer;
-import static ij.plugin.filter.ParticleAnalyzer.EXCLUDE_EDGE_PARTICLES;
+
 import static ij.plugin.filter.ParticleAnalyzer.ADD_TO_MANAGER;
+import static ij.plugin.filter.ParticleAnalyzer.EXCLUDE_EDGE_PARTICLES;
+import static ij.plugin.filter.ParticleAnalyzer.SHOW_PROGRESS;
 import static ij.process.ImageProcessor.RED_LUT;
 
 
@@ -58,7 +60,7 @@ public class SliceAnalysis {
     
     public SliceAnalysis(){}
     
-    public SliceAnalysis(ImagePlus impSkeleton,ImagePlus impMask, int slice, int minSize){
+    public SliceAnalysis(ImagePlus impSkeleton,ImagePlus impMask, int slice, int minSize, String ExcludeOnEdge){
     
 
                 ArrayList alResult = new ArrayList();
@@ -126,8 +128,8 @@ public class SliceAnalysis {
                 alResult.add(totalTubeLength); //length summation
                 alResult.add((double)totalTubeLength/countSkeletons); //average tube length
 		alResult.add((double)countBranches/countNodes); //ratio
-		alResult.add((int)calculateClosedNetworkVariables(impAnalysis, this.NETWORKCOUNT, minSize)); //sum of closed networks
-		alResult.add((double)calculateClosedNetworkVariables(impAnalysis, this.NETWORKAREA, minSize)); //average size of closed networks
+		alResult.add((int)calculateClosedNetworkVariables(impAnalysis, this.NETWORKCOUNT, minSize, ExcludeOnEdge)); //sum of closed networks
+		alResult.add((double)calculateClosedNetworkVariables(impAnalysis, this.NETWORKAREA, minSize,ExcludeOnEdge)); //average size of closed networks
                 
                 impAnalysis.flush();
                 impSkeleton.flush();
@@ -152,16 +154,18 @@ public class SliceAnalysis {
 //        return rt.getCounter();
 //
 //    };
-    private double calculateClosedNetworkVariables(ImagePlus impMask, int choice, int minSize){
+    private double calculateClosedNetworkVariables(ImagePlus impMask, int choice, int minSize, String ExcludeOnEdge){
     
        ResultsTable rt = new ResultsTable();
         int countRt = 0;
+        int Edge;
         
         double networkArea= 0;
 
         if(choice == this.NETWORKCOUNT){ impMask.getProcessor().invert();impMask.getProcessor().setThreshold(255,255,RED_LUT);}
+        if(ExcludeOnEdge.equals("Yes")){Edge = EXCLUDE_EDGE_PARTICLES;} else{Edge = SHOW_PROGRESS;}
 
-        ParticleAnalyzer pa = new ParticleAnalyzer(EXCLUDE_EDGE_PARTICLES, AREA, rt, minSize, Double.POSITIVE_INFINITY, 0, 1);
+        ParticleAnalyzer pa = new ParticleAnalyzer(Edge, AREA, rt, minSize, Double.POSITIVE_INFINITY, 0, 1);
         pa.analyze(impMask);
         countRt = rt.getCounter();
         
