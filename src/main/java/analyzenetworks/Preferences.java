@@ -30,7 +30,7 @@ import java.awt.AWTEvent;
 //lots to do here
 public class Preferences extends java.lang.Object implements DialogListener {
 
-    private Object[] Preferences = new Object[9];
+    private Object[] Preferences = new Object[10];
     private boolean valid = false;
 
     public Preferences() {
@@ -73,27 +73,27 @@ public class Preferences extends java.lang.Object implements DialogListener {
 
         String[] ThresholdMethodChoice = {"Default", "Huang", "Intermodes", "IsoData", "IJ_IsoData", "Li", "MaxEntropy", "Mean", "MinError", "Minimum", "Moments", "Otsu", "Percentile", "RenyiEntropy", "Shanbhag", "Triangle", "Yen"};
 
-        GenericDialog gd = new GenericDialog("Network Analysis v0.1");
+        GenericDialog gd = new GenericDialog("Network Analysis v0.6.5");
 
         gd.addMessage("Preprocessing Options:");
         gd.addRadioButtonGroup("Background Subtraction:", YesNo, 1, 1, YesNo[0]);
-        if (Background == "Yes") {
+        if ("Yes".equals(Background)) {
             gd.addNumericField("    Radius:", BackgroundRadius, 0);
         }
         gd.addRadioButtonGroup("Enhance Contrast:", YesNo, 1, 1, YesNo[0]);
         gd.addRadioButtonGroup("Maximum Filter:", YesNo, 1, 1, YesNo[0]);
-        if (Maximum == "Yes") {
+        if ("Yes".equals(Maximum)) {
             gd.addNumericField("    Radius:", MaximumRadius, 0);
         }
         gd.addRadioButtonGroup("Blur:", YesNo, 1, 1, YesNo[0]);
-        //gd.addChoice("Thresholding Method:", ThresholdMethodChoice, ThresholdMethodChoice[7]);
+        gd.addChoice("Thresholding Method:", ThresholdMethodChoice, ThresholdMethodChoice[7]);
         gd.addRadioButtonGroup("Use image calibration:", YesNo, 1, 1, YesNo[0]);
         gd.addNumericField("Minimum Network Size (px)", NetworkSize, 0);
         gd.addRadioButtonGroup("Exclude Edge Networks:", YesNo, 1, 1, YesNo[1]);
         gd.addMessage("___________________________________________");
 
         gd.addMessage("Interface for preprocessing and network analysis");
-        gd.addMessage("Author: Seth Winfree Indiana University   02/17/2014");
+        gd.addMessage("Author: Seth Winfree Indiana University   06/02/2014");
         gd.showDialog();
         if (gd.wasCanceled()) {
             return false;
@@ -102,10 +102,10 @@ public class Preferences extends java.lang.Object implements DialogListener {
         Background = gd.getNextRadioButton();
         BackgroundRadius = (int) gd.getNextNumber();
         Contrast = gd.getNextRadioButton();
-        Maximum = gd.getNextRadioButton();;
+        Maximum = gd.getNextRadioButton();
         MaximumRadius = (int) gd.getNextNumber();
         Blur = gd.getNextRadioButton();
-        //ThresholdMethod = gd.getNextChoice();
+        ThresholdMethod = gd.getNextChoice();
         Calibration = gd.getNextRadioButton();
         NetworkSize = (int) gd.getNextNumber();
         ExcludeEdge = gd.getNextRadioButton();
@@ -120,6 +120,7 @@ public class Preferences extends java.lang.Object implements DialogListener {
         this.Preferences[6] = NetworkSize;
         this.Preferences[7] = Calibration;
         this.Preferences[8] = ExcludeEdge;
+        this.Preferences[9] = ThresholdMethod;
 
         return true;
     }

@@ -57,8 +57,9 @@ public class Analyze_Network implements PlugInFilter {
 
     private String[] UnCalibratedHeadings = new String[11];
     private String[] CalibratedHeadings = new String[11];
+    
+    private String Version = "v0.6.5 r1  06/02/2014";
 
-    ;
 
 	/**
 	 * This method gets called by ImageJ / Fiji to determine
@@ -120,6 +121,7 @@ public class Analyze_Network implements PlugInFilter {
             final Date startTime = new Date();
             IJ.showStatus("PreProcessing image...");
             IJ.log("____________________________________________________");
+            IJ.log("Network Analysis "+ Version);
             IJ.log("Starting network analysis on " + this.image.getTitle() + "...");
             IJ.log("Date: " + DateFormat.getDateInstance().format(new Date()));
             IJ.log("Start time: " + DateFormat.getTimeInstance().format(new Date()));
@@ -210,17 +212,17 @@ public class Analyze_Network implements PlugInFilter {
         return rtResult;
     }
 
-    public static void main(String[] args) {
-        // set the plugins.dir property to make the plugin appear in the Plugins menu
-        Class<?> clazz = Analyze_Network.class;
-        String url = clazz.getResource("/" + clazz.getName().replace('.', '/') + ".class").toString();
-        String pluginsDir = url.substring(5, url.length() - clazz.getName().length() - 6);
-        System.setProperty("plugins.dir", pluginsDir);
-
-        // start ImageJ
-        new ImageJ();
-
-        // run the plugin
-        IJ.runPlugIn(clazz.getName(), "");
-    }
+//    public static void main(String[] args) {
+//        // set the plugins.dir property to make the plugin appear in the Plugins menu
+//        Class<?> clazz = Analyze_Network.class;
+//        String url = clazz.getResource("/" + clazz.getName().replace('.', '/') + ".class").toString();
+//        String pluginsDir = url.substring(5, url.length() - clazz.getName().length() - 6);
+//        System.setProperty("plugins.dir", pluginsDir);
+//
+//        // start ImageJ
+//        new ImageJ();
+//
+//        // run the plugin
+//        IJ.runPlugIn(clazz.getName(), "");
+//    }
 }
