@@ -20,7 +20,7 @@
  *
  * @author Seth Winfree <Seth Winfree at Indiana University>
  */
-package analyze_network;
+package Analyze_Network;
 
 import ij.ImagePlus;
 import ij.measure.ResultsTable;
