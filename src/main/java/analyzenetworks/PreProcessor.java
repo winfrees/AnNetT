@@ -23,7 +23,7 @@
  */
 
 
-package Analyze_Network;
+package analyzenetworks;
 
 
 import ij.ImagePlus;

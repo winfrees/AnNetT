@@ -61,7 +61,7 @@
 					</execution>
 				</executions>
 				<configuration>
-					<mainClass>Analyze_Network</mainClass>
+					<mainClass>analyzenetworks.Analyze_Network</mainClass>
 				</configuration>
 			</plugin>
 		</plugins>

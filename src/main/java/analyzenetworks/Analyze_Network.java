@@ -20,8 +20,11 @@
  *
  * @author Seth Winfree <Seth Winfree at Indiana University>
  */
-package Analyze_Network;
+package analyzenetworks;
 
+import analyzenetworks.PreProcessor;
+import analyzenetworks.SliceAnalysis;
+import analyzenetworks.Preferences;
 import ij.IJ;
 import ij.ImageJ;
 import ij.ImagePlus;
@@ -33,6 +36,7 @@ import ij.plugin.filter.PlugInFilter;
 import ij.process.ImageProcessor;
 
 import static ij.plugin.filter.PlugInFilter.DOES_8G;
+import static ij.plugin.filter.PlugInFilter.DOES_16;
 import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -71,7 +75,7 @@ public class Analyze_Network implements PlugInFilter {
 
         this.image = imp;
 
-        return DOES_8G;
+        return DOES_8G | DOES_16;
 
     }
 
