@@ -45,7 +45,7 @@ import java.util.Date;
  * This is a template for a plugin that requires one image to be opened, and
  * takes it as parameter.
  */
-public class Analyze_Network implements PlugInFilter {
+public class Analyze_Networks implements PlugInFilter {
 
     private ImagePlus image;
     private ImagePlus imageProcessed;
@@ -212,17 +212,17 @@ public class Analyze_Network implements PlugInFilter {
         return rtResult;
     }
 
-//    public static void main(String[] args) {
-//        // set the plugins.dir property to make the plugin appear in the Plugins menu
-//        Class<?> clazz = Analyze_Network.class;
-//        String url = clazz.getResource("/" + clazz.getName().replace('.', '/') + ".class").toString();
-//        String pluginsDir = url.substring(5, url.length() - clazz.getName().length() - 6);
-//        System.setProperty("plugins.dir", pluginsDir);
-//
-//        // start ImageJ
-//        new ImageJ();
-//
-//        // run the plugin
-//        IJ.runPlugIn(clazz.getName(), "");
-//    }
+    public static void main(String[] args) {
+        // set the plugins.dir property to make the plugin appear in the Plugins menu
+        Class<?> clazz = Analyze_Networks.class;
+        String url = clazz.getResource("/" + clazz.getName().replace('.', '/') + ".class").toString();
+        String pluginsDir = url.substring(5, url.length() - clazz.getName().length() - 6);
+        System.setProperty("plugins.dir", pluginsDir);
+
+        // start ImageJ
+        new ImageJ();
+
+        // run the plugin
+        IJ.runPlugIn(clazz.getName(), "");
+    }
 }

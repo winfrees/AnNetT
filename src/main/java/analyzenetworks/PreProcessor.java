@@ -49,7 +49,19 @@ public PreProcessor(ImagePlus imp, Object[] Preferences) {
                         
                         //this.imageResult = new ImagePlus("PreProcessing Result", imp.getStack());
                         
-                        //IJ.log("Starting PreProcessing...");
+                        IJ.log("Starting PreProcessing...");
+                        
+                        if((String)Preferences[10] == "Yes"){
+                            
+                            IJ.log("Removing gris with 3x3 convolution..." + Preferences[11] + " iterations.");
+                            
+                            ImagePlus imageGrid = imageResult.duplicate();
+                            imageGrid.setTitle("GridRemoval");
+                            for(int i = 1; 1 <= (Integer)Preferences[10]; i++)
+                            {
+                            IJ.run("Convolve...", "text1=[0 0 0 0 0 0\n 0 0 0 0 0\n 1 1 1 1 1\n 0 0 0 0 0\n 0 0 0 0 0\n] normalize stack");
+                            }
+                        }
 
                         if((String)Preferences[0] == "Yes"){IJ.run(imageResult, "Subtract Background...", "rolling="+Preferences[1]+" stack"); IJ.log("Subtract Background... rolling="+Preferences[1]+" stack");}
 			if((String)Preferences[2] == "Yes"){IJ.run(imageResult, "Enhance Contrast...", "saturated=0.4 normalize equalize process_all");IJ.log("Enhance Contrast...  saturated=0.4 normalize equalize process_all");}
@@ -60,6 +72,8 @@ public PreProcessor(ImagePlus imp, Object[] Preferences) {
 			IJ.run(imageResult, "Skeletonize", "stack");
                            
                         imp.close();
+                        
+                        
                         //imageOriginal.show();
 			//imageResult.show();
                         //imageNetwork.setTitle("Mask Result");

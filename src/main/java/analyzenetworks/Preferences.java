@@ -30,7 +30,7 @@ import java.awt.AWTEvent;
 //lots to do here
 public class Preferences extends java.lang.Object implements DialogListener {
 
-    private Object[] Preferences = new Object[10];
+    private Object[] Preferences = new Object[12];
     private boolean valid = false;
 
     public Preferences() {
@@ -60,6 +60,8 @@ public class Preferences extends java.lang.Object implements DialogListener {
 //                        this.imageNetwork = imageResult.duplicate();
 //			IJ.run(imageResult, "Skeletonize", "stack");
 //                        
+        String GridRemoval = "Yes";
+        int GridRemovalIterations = 10;
         String Background = "Yes";
         int BackgroundRadius = 10;
         String Contrast = "Yes";
@@ -76,6 +78,8 @@ public class Preferences extends java.lang.Object implements DialogListener {
         GenericDialog gd = new GenericDialog("Network Analysis v0.6.5");
 
         gd.addMessage("Preprocessing Options:");
+        gd.addRadioButtonGroup("Grid Removal:", YesNo, 1, 1, YesNo[1]);
+        gd.addNumericField("    Iterations:", GridRemovalIterations, 0);
         gd.addRadioButtonGroup("Background Subtraction:", YesNo, 1, 1, YesNo[0]);
         if ("Yes".equals(Background)) {
             gd.addNumericField("    Radius:", BackgroundRadius, 0);
@@ -99,6 +103,8 @@ public class Preferences extends java.lang.Object implements DialogListener {
             return false;
         }
 
+        GridRemoval = gd.getNextRadioButton();
+        GridRemovalIterations = (int) gd.getNextNumber();
         Background = gd.getNextRadioButton();
         BackgroundRadius = (int) gd.getNextNumber();
         Contrast = gd.getNextRadioButton();
@@ -121,6 +127,8 @@ public class Preferences extends java.lang.Object implements DialogListener {
         this.Preferences[7] = Calibration;
         this.Preferences[8] = ExcludeEdge;
         this.Preferences[9] = ThresholdMethod;
+        this.Preferences[10] = GridRemoval;
+        this.Preferences[11] = GridRemovalIterations;
 
         return true;
     }
